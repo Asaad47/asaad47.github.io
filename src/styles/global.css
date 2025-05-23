@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@plugin '@tailwindcss/typography';
+
+@theme inline {
+	--font-sans: var(--font-geist);
+}
+
+@layer utilities {
+	.font-arabic {
+		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Arabic', 'Noto Kufi Arabic', sans-serif;
+	}
+}
