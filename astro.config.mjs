@@ -9,6 +9,7 @@ export default defineConfig({
   output: 'static',
   site: 'https://asaad47.github.io',
   base: '/',
+  publicDir: 'public',
   vite: {
     plugins: [tailwindcss()]
   },
