@@ -23,5 +23,6 @@ export default defineConfig({
       cssVariable: "--font-geist",
       fallbacks: ["Inter", "sans-serif"],
     }]
-  }
+  },
+  trailingSlash: 'always' // Added this line
 });
