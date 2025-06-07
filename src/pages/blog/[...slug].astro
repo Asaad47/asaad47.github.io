@@ -41,7 +41,7 @@ const relatedArticles = allArticles.filter(
     lang={article.data.language}
     dir={isArabic ? 'rtl' : 'ltr'}
 >
-    <section class={`p-4 sm:pt-8 sm:px-12 pb-20 min-h-screen ${isArabic ? 'font-arabic' : ''}`}>
+    <section class={`p-2 sm:p-4 sm:pt-8 sm:px-12 pb-20 min-h-screen max-w-full overflow-x-hidden ${isArabic ? 'font-arabic' : ''}`}>
         <Prose>
             <Content />
         </Prose>
@@ -56,16 +56,16 @@ const relatedArticles = allArticles.filter(
 
         {
             relatedArticles.length > 0 && (
-                <div>
-                    <h2 class="mt-8 sm:mt-12 text-lg text-zinc-400 font-medium">
+                <div class="mt-8 sm:mt-12">
+                    <h2 class="text-lg text-zinc-400 font-medium">
                         Related Articles
                     </h2>
 
-                    <ul class="mt-2.5">
+                    <ul class="mt-2.5 space-y-4">
                         {relatedArticles.map((article) => (
                             <li class="group">
-                                <a href={`/blog/${article.data.slug}`}>
-                                    <h3 class="text-xl text-zinc-50 group-hover:text-white underline underline-offset-2 decoration-transparent group-hover:decoration-zinc-500">
+                                <a href={`/blog/${article.data.slug}`} class="block">
+                                    <h3 class="text-lg sm:text-xl text-zinc-50 group-hover:text-white underline underline-offset-2 decoration-transparent group-hover:decoration-zinc-500">
                                         {article.data.title}
                                     </h3>
                                     <p class="mt-0.5 text-sm text-zinc-400">

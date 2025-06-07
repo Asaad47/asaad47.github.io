@@ -9,7 +9,7 @@ const pathname = Astro.url.pathname;
 ---
 
 <RootLayout title={title} description={description} lang={lang} dir={dir}>
-	<div class="flex relative gap-4 w-full max-w-screen-xl">
+	<div class="flex relative gap-4 w-full max-w-screen-xl mx-auto px-2 sm:px-4">
 		<nav class="relative w-4 md:min-w-2xs xl:min-w-sm sm:min-h-screen sm:ml-4 sm:pb-4">
 			<div class="w-full h-full max-sm:w-4 md:max-w-2xs xl:max-w-sm fixed -z-10 sm:bottom-4 sm:rounded-b-full overflow-hidden">
 				<WarpBackground
@@ -25,11 +25,9 @@ const pathname = Astro.url.pathname;
 			</div>
 		</nav>
 
-		<main class="relative"  >
+		<main class="relative w-full max-w-[calc(100%-2rem)] sm:max-w-none">
 			<slot />
 			<Footer />
 		</main>
-
-
 	</div>
 </RootLayout>
