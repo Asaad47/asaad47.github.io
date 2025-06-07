@@ -19,6 +19,7 @@ The idea for this project came to me during a lecture on De Bruijn Graph Assembl
 I checked the Wikipedia page, hoping it would refresh my memory. Eventually, it clicked. I had come across the name in a different context, during my Software Performance Engineering class. I searched through the lecture slides stored on my laptop and, after a bit of digging, found it. The name appeared in a section about using permutations to efficiently compute `log(x)` (check slides 45 and 47 of [MIT's OCW version](https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/resources/mit6_172f18_lec3/)). The application was very different from what we were studying in the bioinformatics class, but the shared terminology stuck with me.
 
 This gave me the idea to build a CLI tool that could search through all my lecture slides and pick relevant content based on a query. In short, I needed a system that could scan a collection of PDFs and identify the most relevant slides for a given prompt.
+
 ## What I wanted to build
 
 The goal was straightforward: given a prompt (like “De Bruijn”), find the most relevant slides from a bunch of PDFs. In other words, a lightweight Retrieval-Augmented Generation (RAG) system.
@@ -46,9 +47,9 @@ import pymupdf
 
 doc = pymupdf.open("example2.pdf")
 for i, page in enumerate(doc):
-	print(f"-- Page {i+1}:")
-	text = page.get_text()
-	print(text)
+ print(f"-- Page {i+1}:")
+ text = page.get_text()
+ print(text)
 
 doc.close()
 ```
@@ -64,35 +65,35 @@ doc = pymupdf.open("example2.pdf")
 md_text = pymupdf4llm.to_markdown(doc, pages=[10, 11], write_images=True, page_chunks=True)
 
 for page in md_text:
-	print("*** Of interest:")
-	print("file_path:", page['metadata']['file_path'])
-	print("page number:", page['metadata']['page'])
-	print("page text:", page['text'])  # in Markdown format
+ print("*** Of interest:")
+ print("file_path:", page['metadata']['file_path'])
+ print("page number:", page['metadata']['page'])
+ print("page text:", page['text'])  # in Markdown format
 ```
 
 ### Final Version of Text Extraction (found in `create_db.py`)
 
 ```python
 def load_pdf_as_markdown(pdf_path: str) -> list[Document]:
-	"""Load a PDF file and convert it to markdown documents."""
-	doc = pymupdf.open(pdf_path)
-	
-	# Get total number of pages
-	total_pages = len(doc)
-	
-	# Convert each page to markdown
-	pages = to_markdown(doc, page_chunks=True)
-	
-	documents = [Document(
-		page_content=page['text'],
-		metadata={
-			'source': pdf_path,
-			'page': page['metadata']['page'],  # slide number
-			'total_pages': total_pages
-		}
-	) for page in pages]
-	
-	return documents
+ """Load a PDF file and convert it to markdown documents."""
+ doc = pymupdf.open(pdf_path)
+ 
+ # Get total number of pages
+ total_pages = len(doc)
+ 
+ # Convert each page to markdown
+ pages = to_markdown(doc, page_chunks=True)
+ 
+ documents = [Document(
+  page_content=page['text'],
+  metadata={
+   'source': pdf_path,
+   'page': page['metadata']['page'],  # slide number
+   'total_pages': total_pages
+  }
+ ) for page in pages]
+ 
+ return documents
 ```
 
 ## Vector Database: ChromaDB
@@ -100,6 +101,7 @@ def load_pdf_as_markdown(pdf_path: str) -> list[Document]:
 I chose ChromaDB over FAISS and Qdrant due to its simplicity and suitability for local development. It integrates well with the Langchain ecosystem and provides a fast, dev-friendly setup.
 
 Results are retrieved simply using the following call:
+
 ```python
 vectorstore = Chroma(persist_directory=CHROMA_DIR, embedding_function=embedding_model)
 results = vectorstore.similarity_search(query, k=k)
@@ -124,7 +126,7 @@ There are two main scripts:
 - `create_db.py`: processes PDFs and builds the vector database
 - `search.py`: takes a query and shows relevant slides in the terminal
 
-###  Example Workflow:
+### Example Workflow
 
 1. Add PDFs to the `PDF_PATHS` list in `config.yaml`
 2. Run `python create_db.py` to build the database.
@@ -154,4 +156,3 @@ Some useful resources that helped me along the way:
 - [pymupdf RAG Example](https://github.com/pymupdf/RAG/blob/main/examples/country-capitals/country-capitals.py)
 - [PyMuPDF Documentation](https://pymupdf.readthedocs.io/en/latest/rag.html)
 - [SBERT Models](https://sbert.net/docs/sentence_transformer/pretrained_models.html)
-
