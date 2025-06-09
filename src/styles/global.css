@@ -9,4 +9,10 @@
 	.font-arabic {
 		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Arabic', 'Noto Kufi Arabic', sans-serif;
 	}
+	
+	pre code {
+		white-space: pre-wrap;
+		word-break: break-word;
+		overflow-x: auto;
+	}
 }
