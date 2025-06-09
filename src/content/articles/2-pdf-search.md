@@ -47,9 +47,9 @@ import pymupdf
 
 doc = pymupdf.open("example2.pdf")
 for i, page in enumerate(doc):
- print(f"-- Page {i+1}:")
- text = page.get_text()
- print(text)
+    print(f"-- Page {i+1}:")
+    text = page.get_text()
+    print(text)
 
 doc.close()
 ```
@@ -65,35 +65,35 @@ doc = pymupdf.open("example2.pdf")
 md_text = pymupdf4llm.to_markdown(doc, pages=[10, 11], write_images=True, page_chunks=True)
 
 for page in md_text:
- print("*** Of interest:")
- print("file_path:", page['metadata']['file_path'])
- print("page number:", page['metadata']['page'])
- print("page text:", page['text'])  # in Markdown format
+    print("*** Of interest:")
+    print("file_path:", page['metadata']['file_path'])
+    print("page number:", page['metadata']['page'])
+    print("page text:", page['text'])  # in Markdown format
 ```
 
 ### Final Version of Text Extraction (found in `create_db.py`)
 
 ```python
 def load_pdf_as_markdown(pdf_path: str) -> list[Document]:
- """Load a PDF file and convert it to markdown documents."""
- doc = pymupdf.open(pdf_path)
+    """Load a PDF file and convert it to markdown documents."""
+    doc = pymupdf.open(pdf_path)
  
- # Get total number of pages
- total_pages = len(doc)
+    # Get total number of pages
+    total_pages = len(doc)
  
- # Convert each page to markdown
- pages = to_markdown(doc, page_chunks=True)
+    # Convert each page to markdown
+    pages = to_markdown(doc, page_chunks=True)
  
- documents = [Document(
-  page_content=page['text'],
-  metadata={
-   'source': pdf_path,
-   'page': page['metadata']['page'],  # slide number
-   'total_pages': total_pages
-  }
- ) for page in pages]
+    documents = [Document(
+        page_content=page['text'],
+        metadata={
+            'source': pdf_path,
+            'page': page['metadata']['page'],  # slide number
+            'total_pages': total_pages
+        }
+    ) for page in pages]
  
- return documents
+    return documents
 ```
 
 ## Vector Database: ChromaDB
