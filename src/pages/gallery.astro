@@ -15,6 +15,7 @@ const projectDemos = [
         fallbackImage: deBruijn,
         category: "AI Terminal App",
         githubUrl: "https://github.com/Asaad47/pdf_search", 
+        blogpostUrl: "/blog/pdf-search"
     },
     {
         title: "Calories Tracker",
@@ -104,7 +105,7 @@ const instagramHandle = "@asaad.jpeg";
                             </p>
                             
                             {/* Project Links */}
-                            {(project.githubUrl || project.deploymentUrl) && (
+                            {(project.githubUrl || project.deploymentUrl || project.blogpostUrl) && (
                                 <div class="flex items-center gap-3 pt-3 border-t border-zinc-800 mt-auto">
                                     {project.githubUrl && (
                                         <a 
@@ -130,6 +131,19 @@ const instagramHandle = "@asaad.jpeg";
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                                             </svg>
                                             <span>Live Demo</span>
+                                        </a>
+                                    )}
+                                    {project.blogpostUrl && (
+                                        <a 
+                                            href={project.blogpostUrl} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors duration-200 text-sm project-link"
+                                        >
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            <span>Blog</span>
                                         </a>
                                     )}
                                 </div>
