@@ -2,42 +2,398 @@
 import { Image } from 'astro:assets';
 import H1 from "../components/h1.astro";
 import InfoLayout from "../layouts/InfoLayout.astro";
-import ACGenerator from "../assets/ac-generator.jpg";
-import FluidPropulsion from "../assets/fluid-propulsion.jpg";
-import ElectricMotor from "../assets/electro-magnetic-motor.jpg";
+import deBruijn from "../assets/deBruijn.png";
+import cals from "../assets/cals.png";
+import schedule from "../assets/schedule.png";
 
-const projects = [
-     {
-          title: "AC Generator",
-          description: "Transform mechanical energy into alternating current, powering the modern electric grid",
-          image: ACGenerator
-     },
-     {
-          title: "Fluid Propulsion",
-          description: "Bladeless turbine using fluid dynamics for efficient, low-friction propulsion.",
-          image: FluidPropulsion
-     },
-     {
-          title: "Electro-Magnetic Motor",
-          description: "Harness alternating current to produce smooth, efficient rotary motion.",
-          image: ElectricMotor
-     }];
+
+const projectDemos = [
+    {
+        title: "PDF Semantic Search",
+        description: "Search through your PDF slides with natural language queries",
+        demoUrl: "/demos/pdf-search.mp4",
+        fallbackImage: deBruijn,
+        category: "AI Terminal App",
+        githubUrl: "https://github.com/Asaad47/pdf_search", 
+    },
+    {
+        title: "Calories Tracker",
+        description: "Tracking calories and protein macros with a simple UI app",
+        demoUrl: "/demos/cals.mp4",
+        fallbackImage: cals,
+        category: "Web app"
+    },
+    {
+        title: "Residents On-call Scheduler",
+        description: "Schedule residents on-call shifts with a simple UI app",
+        demoUrl: "/demos/scheduler.mp4",
+        fallbackImage: schedule,
+        category: "Web app",
+        githubUrl: "https://github.com/Asaad47/residents-scheduler",
+        deploymentUrl: "https://residents-scheduler.streamlit.app"
+    }
+];
+
+
+const photography = [
+    {
+        imageUrl: "/photos/eagle.JPG",
+        location: "Urban Photography",
+        date: "2024"
+    },
+    {
+        imageUrl: "/photos/car.JPG",
+        location: "Street Photography", 
+        date: "2024"
+    },
+    {
+        imageUrl: "/photos/duck.JPG",
+        location: "Nature Photography",
+        date: "2024"
+    }
+];
+
+const instagramHandle = "@asaad.jpeg";
 ---
 
 <InfoLayout>
-     <div class="p-4 sm:pt-8 sm:px-12 pb-20 min-h-screen">
-          <H1> Gallery </H1>
+    <div class="p-4 sm:pt-8 sm:px-12 pb-20 min-h-screen">
+        <H1>Gallery</H1>
+        
+        <!-- Project Demos Section -->
+        <section class="mt-12 sm:mt-16">
+            <div class="mb-8">
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Project Demos</h2>
+                <p class="text-zinc-400 text-lg">Simple projects to make life easier</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {projectDemos.map((project, index) => (
+                    <div 
+                        class="group relative bg-zinc-900/50 backdrop-blur-sm rounded-xl overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-all duration-300 hover:shadow-2xl hover:shadow-zinc-900/20 cursor-pointer flex flex-col"
+                        data-modal-type="project"
+                        data-project-index={index}
+                    >
+                        <div class="aspect-square relative overflow-hidden">
+                            <video 
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                autoplay 
+                                loop 
+                                muted 
+                                playsinline
+                            >
+                                <source src={project.demoUrl} type="video/mp4" />
+                                <Image src={project.fallbackImage} alt={project.title} class="w-full h-full object-cover" />
+                            </video>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-medium text-zinc-500 bg-zinc-800 px-2 py-1 rounded-full">
+                                    {project.category}
+                                </span>
+                                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            </div>
+                            
+                            <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-zinc-200 transition-colors">
+                                {project.title}
+                            </h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed mb-4 flex-grow">
+                                {project.description}
+                            </p>
+                            
+                            {/* Project Links */}
+                            {(project.githubUrl || project.deploymentUrl) && (
+                                <div class="flex items-center gap-3 pt-3 border-t border-zinc-800 mt-auto">
+                                    {project.githubUrl && (
+                                        <a 
+                                            href={project.githubUrl} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors duration-200 text-sm project-link"
+                                        >
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                            </svg>
+                                            <span>Code</span>
+                                        </a>
+                                    )}
+                                    {project.deploymentUrl && (
+                                        <a 
+                                            href={project.deploymentUrl} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors duration-200 text-sm project-link"
+                                        >
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                            </svg>
+                                            <span>Live Demo</span>
+                                        </a>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </section>
 
-          <!-- <ul class="mt-4 sm:mt-12 grid grid-cols-1 sm:grid-cols-3 gap-16 sm:gap-8">
-               {projects.map((project) => (
-                    <li>
-                         <Image src={project.image} alt={project.title} class="aspect-[1/1.33] object-center object-cover rounded-lg shadow-lg mb-4 sm:mb-0 sm:mr-4" />
-                         <div class="p-1 sm:p-2">
-                              <h2 class="text-base text-zinc-100">{project.title}</h2>
-                              <p class="text-sm text-zinc-400 text-balance">{project.description}</p>
-                         </div>
-                    </li>
-               ))}
-          </ul> -->
-     </div>
+        <!-- Photography Section -->
+        <section class="mt-20 sm:mt-24">
+            <div class="mb-8">
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Photography</h2>
+                <p class="text-zinc-400 text-lg mb-4">Capturing moments with my Canon R50 and iPhone</p>
+                <div class="flex items-center gap-4">
+                    <a 
+                        href={`https://instagram.com/${instagramHandle.replace('@', '')}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 text-zinc-400 hover:text-pink-400 transition-colors duration-200"
+                    >
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        <span class="text-sm font-medium">{instagramHandle}</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {photography.map((photo, index) => (
+                    <div 
+                        class="group relative bg-zinc-900/30 backdrop-blur-sm rounded-xl overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-all duration-300 hover:shadow-2xl hover:shadow-zinc-900/20 cursor-pointer"
+                        data-modal-type="photo"
+                        data-photo-index={index}
+                    >
+                        <div class="aspect-[4/5] relative overflow-hidden">
+                            <img 
+                                src={photo.imageUrl} 
+                                alt={photo.location}
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                loading="lazy"
+                            />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            
+                            <!-- Overlay content -->
+                            <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-zinc-200 transition-colors">
+                                {photo.location}
+                            </h3>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            
+            <!-- Call to action for Instagram -->
+            <div class="mt-12 text-center">
+                <a 
+                    href={`https://instagram.com/${instagramHandle.replace('@', '')}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-3 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 rounded-full px-6 py-3 hover:from-pink-500/20 hover:to-purple-500/20 hover:border-pink-500/40 transition-all duration-200 cursor-pointer"
+                >
+                    <svg class="w-5 h-5 text-pink-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                    <span class="text-zinc-300">Check out my Instagram for more photos</span>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="relative max-w-4xl w-full my-8">
+            <!-- Close button -->
+            <button id="closeModal" class="absolute -top-12 right-0 text-white/70 hover:text-white transition-colors duration-200 z-10">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            
+            <!-- Modal content -->
+            <div id="modalContent" class="bg-zinc-900/80 backdrop-blur-md rounded-2xl border border-zinc-800 overflow-hidden">
+                <!-- Content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
 </InfoLayout>
+
+<script>
+    // Modal functionality
+    const modal = document.getElementById('modal') as HTMLElement;
+    const modalContent = document.getElementById('modalContent') as HTMLElement;
+    const closeModal = document.getElementById('closeModal') as HTMLButtonElement;
+    
+    // Project data
+    const projectDemos = [
+        {
+            title: "PDF Semantic Search",
+            description: "Search through your PDF slides with natural language queries",
+            demoUrl: "/demos/pdf-search.mp4",
+            category: "AI Terminal App",
+            githubUrl: "https://github.com/Asaad47/pdf_search",
+        },
+        {
+            title: "Calories Tracker",
+            description: "Tracking calories and protein macros with a simple UI app",
+            demoUrl: "/demos/cals.mp4",
+            category: "Web app"
+        },
+        {
+            title: "Residents On-call Scheduler",
+            description: "Schedule residents on-call shifts with a simple UI app",
+            demoUrl: "/demos/scheduler.mp4",
+            category: "Web app",
+            githubUrl: "https://github.com/Asaad47/residents-scheduler",
+            deploymentUrl: "https://residents-scheduler.streamlit.app"
+        }
+    ];
+
+    const photography = [
+        {
+            imageUrl: "/photos/eagle.JPG",
+            location: "Urban Photography",
+            date: "2024"
+        },
+        {
+            imageUrl: "/photos/car.JPG",
+            location: "Street Photography", 
+            date: "2024"
+        },
+        {
+            imageUrl: "/photos/duck.JPG",
+            location: "Nature Photography",
+            date: "2024"
+        }
+    ];
+
+    function openModal(type: string, index: number) {
+        if (!modal || !modalContent) return;
+        
+        let content = '';
+        
+        if (type === 'project') {
+            const project = projectDemos[index];
+            content = `
+                <div class="p-8">
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm font-medium text-zinc-500 bg-zinc-800 px-3 py-1 rounded-full">
+                                ${project.category}
+                            </span>
+                            <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white mb-3">${project.title}</h2>
+                        <p class="text-zinc-300 text-lg leading-relaxed">${project.description}</p>
+                    </div>
+                    <div class="aspect-square bg-zinc-800 rounded-xl overflow-hidden max-w-md mx-auto">
+                        <video 
+                            class="w-full h-full object-cover"
+                            autoplay 
+                            loop 
+                            muted 
+                            controls
+                            playsinline
+                        >
+                            <source src="${project.demoUrl}" type="video/mp4" />
+                        </video>
+                    </div>
+                </div>
+            `;
+        } else if (type === 'photo') {
+            const photo = photography[index];
+            content = `
+                <div class="p-8">
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-bold text-white mb-2">${photo.location}</h2>
+                        <p class="text-zinc-400 text-lg">${photo.date}</p>
+                    </div>
+                    <div class="max-h-[70vh] overflow-hidden rounded-xl">
+                        <img 
+                            src="${photo.imageUrl}" 
+                            alt="${photo.location}"
+                            class="w-full h-full object-contain"
+                        />
+                    </div>
+                </div>
+            `;
+        }
+        
+        modalContent.innerHTML = content;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModalFunc() {
+        if (!modal) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Event listeners
+    document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (!target) return;
+        
+        // Don't open modal if clicking on project links
+        if (target.closest('.project-link')) {
+            return;
+        }
+        
+        const card = target.closest('[data-modal-type]') as HTMLElement;
+        if (card) {
+            const type = card.dataset.modalType;
+            const index = parseInt(card.dataset[type === 'project' ? 'projectIndex' : 'photoIndex'] || '0');
+            openModal(type || '', index);
+        }
+    });
+
+    if (closeModal) {
+        closeModal.addEventListener('click', closeModalFunc);
+    }
+    
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModalFunc();
+            }
+        });
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+            closeModalFunc();
+        }
+    });
+</script>
+
+<style>
+    /* Custom scrollbar for webkit browsers */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: rgba(39, 39, 42, 0.3);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: rgba(113, 113, 122, 0.5);
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(113, 113, 122, 0.7);
+    }
+</style>
