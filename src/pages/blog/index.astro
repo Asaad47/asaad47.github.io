@@ -5,26 +5,26 @@ import { formatDate } from "../../lib/utils";
 import InfoLayout from "../../layouts/InfoLayout.astro";
 import { getCollection } from "astro:content";
 
-export const prerender = true;
-
 const allArticles = await getCollection("articles");
-const categories = [...new Set(allArticles.map((article) => article.data.category))];
+// Sort articles by pubDate in descending order (newest first)
+const sortedArticles = allArticles.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const categories = [...new Set(sortedArticles.map((article) => article.data.category))];
 
 const selectedCategory = Astro.url.searchParams.get("category") || "all";
 const articles = selectedCategory === "all" 
-    ? allArticles 
-    : allArticles.filter(article => article.data.category.toLowerCase() === selectedCategory.toLowerCase());
+    ? sortedArticles 
+    : sortedArticles.filter(article => article.data.category.toLowerCase() === selectedCategory.toLowerCase());
 ---
 
 <InfoLayout>
     <div class="p-2 sm:p-4 sm:pt-8 sm:px-12 pb-20 min-h-screen max-w-full overflow-x-hidden">
         <H1> Blog </H1>
 
-        <ul class="mt-4 flex flex-wrap items-center gap-2 sm:gap-4">
+        <ul class="mt-4 flex flex-wrap items-center gap-2 sm:gap-4" id="category-filters">
             <li>
-                <a href="/blog" class={clsx("w-fit px-3 py-1 text-sm bg-transparent rounded-full transition-all duration-300 ease-in-out",
+                <a href="/blog" class={clsx("w-fit px-3 py-1 text-sm bg-transparent rounded-full transition-all duration-300 ease-in-out category-link",
                     selectedCategory === "all" ? "text-white bg-zinc-100/20 outline-2 outline-offset-2 outline-zinc-100/20" : "text-zinc-400 hover:text-zinc-300"
-                )}>
+                )} data-category="all">
                     All
                 </a>
             </li>
@@ -34,9 +34,10 @@ const articles = selectedCategory === "all"
                     <li>
                         <a
                             href={`/blog?category=${category.toLowerCase()}`}
-                            class={clsx("w-fit px-3 py-1 text-sm bg-transparent rounded-full transition-all duration-300 ease-in-out",
+                            class={clsx("w-fit px-3 py-1 text-sm bg-transparent rounded-full transition-all duration-300 ease-in-out category-link",
                                 selectedCategory === category.toLowerCase() ? "text-white bg-zinc-100/20 outline-2 outline-offset-2 outline-zinc-100/20" : "text-zinc-400 hover:text-zinc-200"
                             )}
+                            data-category={category.toLowerCase()}
                         >
                             {category}
                         </a>
@@ -45,10 +46,10 @@ const articles = selectedCategory === "all"
             }
         </ul>
 
-        <ul class="mt-4 space-y-6">
+        <ul class="mt-4 space-y-6" id="articles-list">
             {
                 articles.map((article) => (
-                    <li>
+                    <li class="article-item" data-category={article.data.category.toLowerCase()}>
                         <a
                             class="block space-y-1 group"
                             href={`/blog/${article.data.slug}`}
@@ -70,3 +71,70 @@ const articles = selectedCategory === "all"
         </ul>
     </div>
 </InfoLayout>
+
+<script>
+    // Client-side category filtering
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoryLinks = document.querySelectorAll('.category-link');
+        const articleItems = document.querySelectorAll('.article-item');
+        
+        // Get initial category from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCategory = urlParams.get('category') || 'all';
+        
+        // Update active category link
+        updateActiveCategory(currentCategory);
+        
+        // Add click handlers to category links
+        categoryLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const category = this.getAttribute('data-category');
+                
+                // Update URL
+                const url = new URL(window.location);
+                if (category === 'all') {
+                    url.searchParams.delete('category');
+                } else {
+                    url.searchParams.set('category', category);
+                }
+                window.history.pushState({}, '', url);
+                
+                // Filter articles
+                filterArticles(category);
+                
+                // Update active category link
+                updateActiveCategory(category);
+            });
+        });
+        
+        function filterArticles(category) {
+            articleItems.forEach(item => {
+                const itemCategory = item.getAttribute('data-category');
+                if (category === 'all' || itemCategory === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        function updateActiveCategory(category) {
+            categoryLinks.forEach(link => {
+                const linkCategory = link.getAttribute('data-category');
+                if (linkCategory === category) {
+                    link.classList.remove('text-zinc-400', 'hover:text-zinc-300', 'hover:text-zinc-200');
+                    link.classList.add('text-white', 'bg-zinc-100/20', 'outline-2', 'outline-offset-2', 'outline-zinc-100/20');
+                } else {
+                    link.classList.remove('text-white', 'bg-zinc-100/20', 'outline-2', 'outline-offset-2', 'outline-zinc-100/20');
+                    link.classList.add('text-zinc-400');
+                    if (linkCategory === 'all') {
+                        link.classList.add('hover:text-zinc-300');
+                    } else {
+                        link.classList.add('hover:text-zinc-200');
+                    }
+                }
+            });
+        }
+    });
+</script>
